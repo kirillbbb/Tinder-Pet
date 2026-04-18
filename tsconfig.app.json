@@ -20,6 +20,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+
+    "compilerOptions": {
+      "ignoreDeprecations": "6.0"
+    },
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,

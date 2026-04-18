@@ -4,5 +4,6 @@ export interface Animal {
     age: number
     image: string
     tags: string[]
+    ownerId: number
 }
 
