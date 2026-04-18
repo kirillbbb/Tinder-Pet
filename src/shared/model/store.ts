@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import type { Animal } from '@/entities/animal'
-import { animalsMock } from '@/shared/mocks/animals'
+//import { getAnimals } from '@/shared/api/animals'
+//import { mapAnimal } from '@/entities/animal/model/adapter'
+import {animalMock} from '@/../mocks-data/animals'
 
 interface AppState {
     animals: Animal[]
@@ -68,9 +70,15 @@ export const useAppStore = create<AppState>((set, get) => ({
         set({ isLoading: true, error: null })
 
         try {
-            await new Promise(res => setTimeout(res, 300))
-            set({ animals: animalsMock })
-        } catch {
+            // 🔥 вместо API
+            await new Promise(resolve => setTimeout(resolve, 300)) // имитация загрузки
+
+            set({
+                animals: animalMock,
+                currentIndex: 0,
+            })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
             set({ error: 'Failed to load animals' })
         } finally {
             set({ isLoading: false })

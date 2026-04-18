@@ -1,4 +1,4 @@
-import { BottomNavigation } from '@/widgets/bottom-navigation'
+import { BottomNav } from '@/widgets/bottom-navigation'
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -12,7 +12,7 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
                     {children}
                 </div>
 
-                <BottomNavigation />
+                <BottomNav />
             </div>
         </div>
     )

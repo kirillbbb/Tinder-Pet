@@ -1,0 +1,74 @@
+.card {
+    height: 100%;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.imageWrapper {
+    position: relative;
+    height: 65%;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.nameBlock {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+}
+
+.name {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.age {
+    margin-left: 8px;
+    font-size: 18px;
+}
+
+.content {
+    padding: 16px;
+}
+
+.tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: #eee;
+}
+
+.tag:nth-child(1) {
+    background: var(--color-chip-green);
+}
+
+.tag:nth-child(3) {
+    background: var(--color-chip-blue);
+}
+
+.description {
+    color: var(--color-muted);
+    font-size: 14px;
+    line-height: 1.4;
+}

@@ -1,34 +1,25 @@
 @import "tailwindcss";
-.animal-card {
-    @apply bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3;
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
 }
 
-.animal-card__image {
-    @apply w-full h-[340px] object-cover rounded-xl;
-    user-select: none;
-    pointer-events: none;
-}
+:root {
+    --color-primary: #C65D6D;
+    --color-primary-light: #E48A96;
 
-.animal-card__content {
-    @apply flex flex-col gap-1;
-}
+    --color-bg: #F6F7F9;
+    --color-surface: #FFFFFF;
 
-.animal-card__name {
-    @apply text-xl font-semibold;
-}
+    --color-text: #2D2D2D;
+    --color-muted: #8A8A8A;
 
-.animal-card__meta {
-    @apply text-sm text-gray-500;
-}
+    --color-chip-green: #CDE8D5;
+    --color-chip-blue: #CDE5F2;
 
-.animal-card__tags {
-    @apply flex gap-2 flex-wrap mt-2;
+    --radius-xl: 28px;
 }
-
-.animal-card__tag {
-    @apply text-xs bg-gray-100 px-2 py-1 rounded-lg;
-}
-
 .page-container {
     @apply w-full;
 }
@@ -39,11 +30,6 @@
 
 .page-state {
     @apply text-center text-gray-500;
-}
-.animal-card__image {
-    @apply w-full h-[400px] object-cover rounded-xl;
-    user-select: none;
-    pointer-events: none;
 }
 
 .bottom-nav {
@@ -111,4 +97,17 @@
 
 .section-title {
     @apply text-lg font-semibold;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.animate-slideUp {
+    animation: slideUp 0.25s ease;
 }

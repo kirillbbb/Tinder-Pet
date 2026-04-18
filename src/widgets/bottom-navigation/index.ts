@@ -1,1 +1,1 @@
-export { BottomNavigation } from './ui/BottomNavigation.web'
+export { BottomNav } from './ui/BottomNav.web'

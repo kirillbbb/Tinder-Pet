@@ -1,16 +1,21 @@
-import type { Event } from '@/entities/event'
+import type { Event } from '@/entities/event/model/types'
 
 export const eventsMock: Event[] = [
     {
         id: 1,
-        title: 'Adopt Day',
-        date: 'Oct 20',
-        image: 'https://images.unsplash.com/photo-1601758003122-58d0b3f1f5f6',
+        title: 'Встреча корги в саду',
+        date: '15 Октября, 14:00',
+        location: 'Парк Горького',
+        image:
+            'https://images.unsplash.com/photo-1518717758536-85ae29035b6d',
+        popular: true,
     },
     {
         id: 2,
-        title: 'Pet Festival',
-        date: 'Nov 5',
-        image: 'https://images.unsplash.com/photo-1598137260579-6e1b47f5e6b6',
+        title: 'Прогулка с хаски',
+        date: '18 Октября, 12:00',
+        location: 'Сокольники',
+        image:
+            'https://images.unsplash.com/photo-1543466835-00a7907e9de1',
     },
 ]

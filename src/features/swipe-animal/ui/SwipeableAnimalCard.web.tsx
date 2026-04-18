@@ -1,96 +1,108 @@
-import { motion, useMotionValue, useTransform } from 'framer-motion'
 import {
-    useState,
+    motion,
+    useMotionValue,
+    useTransform,
+    animate,
+} from 'framer-motion'
+import {
     forwardRef,
     useImperativeHandle,
+    useState,
 } from 'react'
-import type { Animal } from '@/entities/animal'
-import { AnimalCard } from '@/entities/animal'
-import { useSwipeAnimal } from '../model/useSwipeAnimal'
 
-interface Props {
-    animal: Animal
-}
+import { useAppStore } from '@/shared/model/store'
+import { AnimalCard } from '@/entities/animal'
+import type { Animal } from '@/entities/animal'
 
 export interface SwipeRef {
     swipeLeft: () => void
     swipeRight: () => void
 }
 
+interface Props {
+    animal: Animal
+}
+
 export const SwipeableAnimalCard = forwardRef<SwipeRef, Props>(
     ({ animal }, ref) => {
-        const { handleSwipe } = useSwipeAnimal()
+        const likeAnimal = useAppStore(state => state.likeAnimal)
+        const dislikeAnimal = useAppStore(state => state.dislikeAnimal)
+        const nextAnimal = useAppStore(state => state.nextAnimal)
 
+        // 🔥 состояние "карточка ушла"
+        const [isGone, setIsGone] = useState(false)
+
+        // движение
         const x = useMotionValue(0)
+
+        // наклон
         const rotate = useTransform(x, [-200, 200], [-15, 15])
 
-        const likeOpacity = useTransform(x, [0, 150], [0, 1])
-        const dislikeOpacity = useTransform(x, [-150, 0], [1, 0])
+        // прозрачность
+        const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5])
 
-        const [isExiting, setIsExiting] = useState(false)
-        const [exitX, setExitX] = useState(0)
+        // тень
+        const boxShadow = useTransform(
+            x,
+            [-200, 0, 200],
+            [
+                '0 10px 30px rgba(0,0,0,0.2)',
+                '0 20px 50px rgba(0,0,0,0.15)',
+                '0 10px 30px rgba(0,0,0,0.2)',
+            ]
+        )
 
-        const triggerSwipe = (direction: 'left' | 'right') => {
-            const value = direction === 'right' ? 300 : -300
-            setExitX(value)
-            setIsExiting(true)
+        // 🔥 свайп
+        const swipe = async (dir: 'left' | 'right') => {
+            const toX = dir === 'right' ? window.innerWidth : -window.innerWidth
+
+            animate(x, toX, {
+                type: 'spring',
+                stiffness: 200,
+                damping: 20,
+            })
+
+            setIsGone(true)
+
+// 🔥 сразу переключаем карточку
+            if (dir === 'right') {
+                likeAnimal(animal.id)
+            } else {
+                dislikeAnimal(animal.id)
+            }
+
+            nextAnimal()
         }
 
         useImperativeHandle(ref, () => ({
-            swipeLeft: () => triggerSwipe('left'),
-            swipeRight: () => triggerSwipe('right'),
+            swipeLeft: () => swipe('left'),
+            swipeRight: () => swipe('right'),
         }))
+
+        // 🔥 если ушла — не рендерим
+        if (isGone) return null
 
         return (
             <motion.div
-                style={{ x, rotate }}
-                drag={!isExiting ? 'x' : false}
+                className="absolute inset-0"
+                style={{ x, rotate, opacity, boxShadow }}
+                drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.8}
-                onDragEnd={(event, info) => {
-                    if (Math.abs(info.offset.x) < 100) return
-
-                    setExitX(info.offset.x)
-                    setIsExiting(true)
+                dragElastic={0.25}
+                transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 25,
                 }}
-                animate={
-                    isExiting
-                        ? {
-                            x: exitX,
-                            opacity: 0,
-                        }
-                        : {
-                            x: 0,
-                            opacity: 1,
-                        }
-                }
-                onAnimationComplete={() => {
-                    if (!isExiting) return
-
-                    handleSwipe(exitX, animal.id)
-
-                    // 🔥 КРИТИЧЕСКИЙ ФИКС
-                    setIsExiting(false)
-                    setExitX(0)
+                onDragEnd={(_, info) => {
+                    if (info.offset.x > 120) {
+                        swipe('right')
+                    } else if (info.offset.x < -120) {
+                        swipe('left')
+                    }
+                    // иначе вернётся назад
                 }}
-                className="relative w-full"
             >
-                {/* LIKE */}
-                <motion.div
-                    style={{ opacity: likeOpacity }}
-                    className="absolute top-6 left-6 text-green-500 text-2xl font-bold border-4 border-green-500 px-4 py-2 rounded-lg"
-                >
-                    LIKE
-                </motion.div>
-
-                {/* NOPE */}
-                <motion.div
-                    style={{ opacity: dislikeOpacity }}
-                    className="absolute top-6 right-6 text-red-500 text-2xl font-bold border-4 border-red-500 px-4 py-2 rounded-lg"
-                >
-                    NOPE
-                </motion.div>
-
                 <AnimalCard animal={animal} />
             </motion.div>
         )

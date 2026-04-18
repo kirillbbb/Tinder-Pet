@@ -5,3 +5,4 @@ export interface Animal {
     image: string
     tags: string[]
 }
+

@@ -1,0 +1,21 @@
+.circle-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.circle-btn--dislike {
+    background: #EAEAEA;
+    color: #A0A0A0;
+}
+
+.circle-btn--like {
+    background: linear-gradient(135deg, #C65D6D, #E48A96);
+    color: white;
+    box-shadow: 0 10px 30px rgba(198,93,109,0.4);
+}
