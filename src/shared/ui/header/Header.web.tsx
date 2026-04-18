@@ -1,4 +1,4 @@
-export const Header = ({ title = 'Убежище' }) => {
+export const Header = ({ title = 'Tinder Pet' }) => {
     return (
         <div className="flex items-center justify-between px-4 py-3">
 
