@@ -1,27 +1,29 @@
-import { Link, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export const BottomNav = () => {
-    const location = useLocation()
-
-    const isActive = (path: string) => location.pathname === path
-
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 flex justify-around items-center">
-            <Link to="/" className={isActive('/') ? 'text-primary' : 'text-gray-400'}>
-                Главная
-            </Link>
+        <div className="fixed bottom-4 left-0 right-0 flex justify-center">
 
-            <Link to="/explore" className={isActive('/explore') ? 'text-primary' : 'text-gray-400'}>
-                Поиск
-            </Link>
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-md px-6 py-3 flex justify-between">
 
-            <Link to="/chats" className={isActive('/chats') ? 'text-primary' : 'text-gray-400'}>
-                Чаты
-            </Link>
+                <NavLink to="/feed" className="text-sm">
+                    Главная
+                </NavLink>
 
-            <Link to="/profile" className={isActive('/profile') ? 'text-primary' : 'text-gray-400'}>
-                Профиль
-            </Link>
-        </nav>
+                <NavLink to="/explore" className="text-sm">
+                    Поиск
+                </NavLink>
+
+                <NavLink to="/chats" className="text-sm">
+                    Чаты
+                </NavLink>
+
+                <NavLink to="/profile" className="text-sm">
+                    Профиль
+                </NavLink>
+
+            </div>
+
+        </div>
     )
 }

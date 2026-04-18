@@ -66,7 +66,7 @@ export const ChatPage = () => {
             </div>
 
             {/* 💬 MESSAGES */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col ">
 
                 {messages.map(msg => {
                     const isMine = msg.senderId === currentUserId
@@ -89,7 +89,7 @@ export const ChatPage = () => {
             </div>
 
             {/* ✏️ INPUT */}
-            <div className="p-3 border-t flex gap-2 bg-white">
+            <div className="p-3 border-t flex gap-2 bg-white pb-24">
 
                 <input
                     value={text}

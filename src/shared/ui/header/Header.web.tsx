@@ -1,21 +1,27 @@
-export const Header = ({ title = 'Tinder Pet' }) => {
+import { users } from '@/../mocks-data/users'
+
+export const Header = ({ title }: { title?: string }) => {
+    const currentUser = users[0]
+
     return (
-        <div className="flex items-center justify-between px-4 py-3">
+        <header className="w-full flex items-center justify-between px-4 py-3 bg-white">
 
-            <div>☰</div>
-
-            <h1 className="text-lg font-semibold text-[#C65D6D]">
-                {title}
-            </h1>
-
-            <div className="flex items-center gap-3">
+            {/* 🔍 слева */}
+            <button className="text-xl">
                 🔍
-                <img
-                    src="https://i.pravatar.cc/40"
-                    className="w-8 h-8 rounded-full"
-                />
-            </div>
+            </button>
 
-        </div>
+            {/* 🧠 центр */}
+            <span className="font-semibold text-[#C65D6D]">
+                {title || 'Tinder Pet'}
+            </span>
+
+            {/* 👤 справа */}
+            <img
+                src={currentUser.avatar}
+                className="w-9 h-9 rounded-full object-cover"
+            />
+
+        </header>
     )
 }
