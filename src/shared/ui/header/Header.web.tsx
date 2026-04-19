@@ -1,7 +1,7 @@
-import { users } from '@/../mocks-data/users'
+import { useAppStore } from '@/shared/model/store'
 
 export const Header = ({ title }: { title?: string }) => {
-    const currentUser = users[0]
+    const user = useAppStore(state => state.user)
 
     return (
         <header className="w-full flex items-center justify-between px-4 py-3 bg-white">
@@ -17,10 +17,16 @@ export const Header = ({ title }: { title?: string }) => {
             </span>
 
             {/* 👤 справа */}
-            <img
-                src={currentUser.avatar}
-                className="w-9 h-9 rounded-full object-cover"
-            />
+            {user?.avatar ? (
+                <img
+                    src={user.avatar}
+                    className="w-9 h-9 rounded-full object-cover"
+                />
+            ) : (
+                <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center text-xs text-gray-500">
+                    {user?.name?.[0] || '?'}
+                </div>
+            )}
 
         </header>
     )

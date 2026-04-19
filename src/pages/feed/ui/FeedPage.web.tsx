@@ -17,7 +17,7 @@ export const FeedPage = () => {
 
             <Header />
 
-            <main className="flex-1 flex items-center justify-center px-4">
+            <main className="flex-1 flex items-center justify-center px-4 pb-24">
                 <AnimalCardStack />
             </main>
 

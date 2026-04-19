@@ -1,9 +1,9 @@
 export interface Animal {
     id: number
+    ownerId: number
     name: string
     age: number
-    image: string
+    image: string | null
+    description: string
     tags: string[]
-    ownerId: number
 }
-

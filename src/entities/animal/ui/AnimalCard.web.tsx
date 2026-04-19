@@ -9,7 +9,10 @@ export const AnimalCard = ({ animal }: Props) => {
     return (
         <div className={styles.card}>
             <div className={styles.imageWrapper}>
-                <img src={animal.image} className={styles.image} />
+                <img
+                    src={animal.image || '/placeholder.png'}
+                    className={styles.image}
+                />
 
                 <div className={styles.overlay} />
 

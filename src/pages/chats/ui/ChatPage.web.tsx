@@ -1,105 +1,132 @@
-import { useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useParams, useLocation } from 'react-router-dom'
 
-import { chats } from '@/../mocks-data/chats'
-import { users } from '@/../mocks-data/users'
-import { events } from '@/../mocks-data/events'
+import { useAppStore } from '@/shared/model/store'
+import { Header } from '@/shared/ui'
+
+import {
+    fetchEventMessages,
+    sendEventMessage
+} from '@/shared/api/eventChat'
 
 export const ChatPage = () => {
     const { id } = useParams()
-    const currentUserId = 1
+    const location = useLocation()
 
-    const chat = chats.find(c => c.id === Number(id))
+    const chatId = Number(id)
 
-    const [messages, setMessages] = useState(chat?.messages || [])
+    const { messages, fetchMessages, sendMessage, user } = useAppStore()
+
     const [text, setText] = useState('')
+    const bottomRef = useRef<HTMLDivElement | null>(null)
 
-    if (!chat) return <div className="p-4">Чат не найден</div>
+    // 🔥 правильное определение типа
+    const isEventChat = location.pathname.includes('event-chat')
 
-    let title = ''
-    let avatar = ''
+    useEffect(() => {
+        if (!chatId) return
 
-    // 🔥 EVENT CHAT
-    if (chat.type === 'event') {
-        const event = events.find(e => e.id === chat.eventId)
+        const loadMessages = async () => {
+            if (isEventChat) {
+                const data = await fetchEventMessages(chatId)
 
-        title = event?.title || 'Событие'
-        avatar = event?.image || ''
-    } else {
-        // 🔥 DIRECT CHAT
-        const otherUserId = chat.users.find(u => u !== currentUserId)
-        const user = users.find(u => u.id === otherUserId)
-
-        title = user?.name || 'User'
-        avatar = user?.avatar || ''
-    }
-
-    const sendMessage = () => {
-        if (!text.trim()) return
-
-        const newMsg = {
-            id: Date.now(),
-            senderId: currentUserId,
-            text,
-            time: 'now',
+                useAppStore.setState({
+                    messages: data.map((m: any) => ({
+                        id: m.id,
+                        text: m.text,
+                        senderId: m.sender,
+                        senderName: m.sender_detail.username,
+                    }))
+                })
+            } else {
+                await fetchMessages(chatId)
+            }
         }
 
-        setMessages(prev => [...prev, newMsg])
+        loadMessages()
+    }, [chatId, isEventChat])
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [messages])
+
+    const handleSend = async () => {
+        if (!text.trim()) return
+
+        if (isEventChat) {
+            await sendEventMessage(chatId, text)
+
+            const data = await fetchEventMessages(chatId)
+
+            useAppStore.setState({
+                messages: data.map((m: any) => ({
+                    id: m.id,
+                    text: m.text,
+                    senderId: m.sender,
+                    senderName: m.sender_detail.username,
+                }))
+            })
+        } else {
+            await sendMessage(chatId, text)
+            await fetchMessages(chatId)
+        }
+
         setText('')
     }
 
     return (
         <div className="h-screen flex flex-col">
 
-            {/* 🔝 HEADER */}
-            <div className="flex items-center gap-3 p-4 border-b bg-white">
+            <Header title={isEventChat ? 'Чат мероприятия' : `Чат #${chatId}`} />
 
-                <img
-                    src={avatar}
-                    className="w-10 h-10 rounded-full object-cover"
-                />
-
-                <span className="font-semibold">
-          {title}
-        </span>
-
-            </div>
-
-            {/* 💬 MESSAGES */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col ">
+            {/* сообщения */}
+            <main className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto bg-gray-100 pb-28">
 
                 {messages.map(msg => {
-                    const isMine = msg.senderId === currentUserId
+                    const isMe = msg.senderId === user?.id
 
                     return (
                         <div
                             key={msg.id}
-                            className={`
-                max-w-[70%] px-4 py-2 rounded-2xl text-sm
-                ${isMine
-                                ? 'self-end bg-[#C65D6D] text-white'
-                                : 'self-start bg-gray-200'}
-              `}
+                            className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
                         >
-                            {msg.text}
+                            <div
+                                className={`
+                                    px-4 py-2 rounded-2xl max-w-[75%] text-sm
+                                    ${isMe
+                                    ? 'bg-[#C65D6D] text-white rounded-br-sm'
+                                    : 'bg-white shadow-sm rounded-bl-sm'
+                                }
+                                `}
+                            >
+                                {!isMe && (
+                                    <div className="text-xs text-gray-400 mb-1">
+                                        {msg.senderName}
+                                    </div>
+                                )}
+
+                                <div>{msg.text}</div>
+                            </div>
                         </div>
                     )
                 })}
 
-            </div>
+                <div ref={bottomRef} />
 
-            {/* ✏️ INPUT */}
+            </main>
+
+            {/* input */}
             <div className="p-3 border-t flex gap-2 bg-white pb-24">
 
                 <input
                     value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    onChange={e => setText(e.target.value)}
                     placeholder="Сообщение..."
-                    className="flex-1 bg-gray-100 px-4 py-2 rounded-full outline-none"
+                    className="flex-1 border rounded-full px-4 py-2 outline-none"
                 />
 
                 <button
-                    onClick={sendMessage}
+                    onClick={handleSend}
                     className="bg-[#C65D6D] text-white px-4 rounded-full"
                 >
                     →

@@ -12,10 +12,16 @@ export const EventCard = ({ event }: Props) => {
         <div className="bg-white rounded-[28px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
 
             {/* картинка */}
-            <img
-                src={event.image}
-                className="w-full h-52 object-cover"
-            />
+            {event.image ? (
+                <img
+                    src={event.image}
+                    className="w-full h-52 object-cover"
+                />
+            ) : (
+                <div className="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-400">
+                    Нет фото
+                </div>
+            )}
 
             <div className="p-4 flex flex-col gap-3">
 
